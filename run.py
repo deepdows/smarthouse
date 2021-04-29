@@ -1,13 +1,13 @@
 from flask import Flask, jsonify, render_template, request
-#from flask_bootstrap import Bootstrap
-from random import randint
+from flask_bootstrap import Bootstrap
+#from random import randint
 
 app = Flask(__name__)
 
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
-#bootstrap = Bootstrap(app)
+bootstrap = Bootstrap(app)
 
 # settings = None
 

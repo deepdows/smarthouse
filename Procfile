@@ -1,1 +1,1 @@
-web: gunicorn app:smarthouse
+web: gunicorn app:app

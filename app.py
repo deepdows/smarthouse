@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template, request
-from flask_bootstrap import Bootstrap
+#from flask_bootstrap import Bootstrap
 from random import randint
 
 app = Flask(__name__)
@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
-bootstrap = Bootstrap(app)
+#bootstrap = Bootstrap(app)
 
 # settings = None
 
@@ -39,4 +39,4 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

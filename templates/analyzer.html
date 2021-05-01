@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='analyzer.css') }}">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="bar">
+            <div id="signal">
+                <img src="{{ url_for('static', filename='img/signal.svg') }}" alt="">
+            </div>
+            <div id="settings">
+                <img src="{{ url_for('static', filename='img/settings.svg') }}" alt="">
+            </div>
+        </div>
+        <div class="monitoring">
+            <div class="temp">
+                <div class="value">{{ temp }}</div>
+                <div class="second-column">
+                    <div class="name">Temperature</div>
+                    <div class="units"><sup>o</sup>C</div>
+                </div>
+            </div>
+            <div class="hum">
+                <div class="value">{{ hum }}</div>
+                <div class="second-column">
+                    <div class="name">Humidity</div>
+                    <div class="units">%</div>
+                </div>
+            </div>
+            <div class="co2">
+                <div class="value">{{ co2 }}</div>
+                <div class="second-column">
+                    <div class="name">CO<sub>2</sub></div>
+                    <div class="units">ppm</div>
+                </div>
+            </div>
+            <div class="pressure">
+                <div class="value">{{ pressure }}</div>
+                <div class="second-column">
+                    <div class="name">Pressure</div>
+                    <div class="units">hPa</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <!-- <script>
+        $(function() {
+            window.setInterval(function(){
+                loadData();
+            }, 1000)
+            function loadData(){
+                $.ajax({
+                    url: '/data',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        $('.data').replaceWith(data);
+                    }
+                });
+            }
+        });
+    </script> -->
+{% endblock %}

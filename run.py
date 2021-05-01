@@ -38,5 +38,9 @@ def index():
 def login():
     return render_template('login.html')
 
+@app.route('/analyzer')
+def analyzer():
+    return render_template('analyzer.html', temp=24.4, hum=45, pressure=1024.1, co2=421)
+
 if __name__ == '__main__':
     app.run(debug=True)

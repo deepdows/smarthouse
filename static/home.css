@@ -1,0 +1,28 @@
+:root{
+    --blue4: #3a86c9;
+    --blue3: #70B2E2;
+}
+.smartplug a, .analyzer a{
+    width: 350px;
+    height: 350px;
+    background-color: var(--blue3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+}
+.smartplug a:hover, .analyzer a:hover{
+    background-color: #58a0d3;
+}
+.smartplug img, .analyzer img{
+    width: 200px;
+}
+body{
+    background-color: var(--blue4);
+}
+.container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    min-height: 100vh;
+}

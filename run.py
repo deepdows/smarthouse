@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, render_template, request
-#from random import randint
 
 app = Flask(__name__)
 
@@ -34,6 +33,10 @@ app.jinja_env.lstrip_blocks = True
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

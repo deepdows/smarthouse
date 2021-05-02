@@ -63,7 +63,7 @@ def analyzer():
 def reboot_analyzer():
     return redirect(url_for('analyzer'))
 
-# API SECTION
+#---- API SECTION ----
 
 analyzer_data = reqparse.RequestParser()
 analyzer_data.add_argument('temp', type=float)

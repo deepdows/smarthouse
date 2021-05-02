@@ -1,0 +1,156 @@
+
+body{
+    font-family: Ubuntu;
+}
+.bar{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+#settings img:nth-child(2){
+    display: none;
+}
+#signal img, #settings img{
+    height: 26px;
+}
+.settings{
+    display: none;
+}
+#settings{
+    cursor: pointer;
+}
+.monitoring{
+    margin-top: 100px;
+    margin-bottom: 50px;
+    color: white;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-columns: 600px;
+    row-gap: 70px;
+}
+.temp, .hum, .co2, .pressure{
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+}
+.co2 .name{
+    margin-bottom: -5px;
+}
+.second-column{
+    width: 50%;
+}
+.units, .name{
+    font-size: 22px;
+}
+.name{
+    opacity: 0.8;
+}
+.units{
+    opacity: 0.5;
+}
+.value{
+    font-size: 60px;
+    width: 50%;
+    text-align: right;
+    padding-right: 5px;
+}
+input[type=radio] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: white;
+
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+  
+    transition: 0.2s all linear;
+    margin-right: 5px;
+  
+    position: relative;
+    top: 4px;
+    margin-bottom: 10px;
+  }
+input[type=radio]:checked {
+    background: #777;
+    border: 5px solid white;
+}
+.settings{
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 90px;
+}
+.brightness-container{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 40px;
+}
+.brightness-container span{
+    color: white;
+    font-size: 22px;
+}
+.brightness{
+    position: relative;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.line{
+    position: absolute;
+    /* top: 15px;
+    right: 8px; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 6px;
+    width: 90%;
+    background-color: white;
+}
+.settings div:nth-child(1),
+.settings div:nth-child(3){
+    color: white;
+    font-size: 34px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.sync-container input{
+    outline: none;
+    width: 100%;
+    height: 26px;
+    padding: 24px 10px;
+    border: 3px solid white;
+    color: white;
+    background: none;
+    border-radius: 10px;
+    font-size: 24px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.sync-container input::placeholder{
+    font-size: 24px;
+    text-align: center;
+    color: #ccc;
+}
+.btns a, .btns input[type=submit]{
+    width: 48%;
+    height: 54px;
+    background: none;
+    border: 3px solid white;
+    color: white;
+    font-size: 24px;
+    outline: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.btns{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}

@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='analyzer.css') }}">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="bar">
+            <div id="signal">
+                <img src="{{ url_for('static', filename='img/signal.svg') }}" alt="">
+            </div>
+            {% if current_user.is_authenticated %}
+            <div id="settings">
+                <img src="{{ url_for('static', filename='img/settings.svg') }}" alt="">
+                <img src="{{ url_for('static', filename='img/close.svg') }}" alt="">
+            </div>
+            {% endif %}
+        </div>
+        <div class="monitoring">
+            <div class="temp">
+                <div class="value">{{ data['temp'] }}</div>
+                <div class="second-column">
+                    <div class="name">Temperature</div>
+                    <div class="units">°C</div>
+                </div>
+            </div>
+            <div class="hum">
+                <div class="value">{{ data['hum'] }}</div>
+                <div class="second-column">
+                    <div class="name">Humidity</div>
+                    <div class="units">%</div>
+                </div>
+            </div>
+            <div class="co2">
+                <div class="value">{{ data['co2'] }}</div>
+                <div class="second-column">
+                    <div class="name">CO<sub><small>2</small></sub></div>
+                    <div class="units">ppm</div>
+                </div>
+            </div>
+            <div class="pressure">
+                <div class="value">{{ data['pressure'] }}</div>
+                <div class="second-column">
+                    <div class="name">Pressure</div>
+                    <div class="units">hPa</div>
+                </div>
+            </div>
+        </div>
+        {% if current_user.is_authenticated %}
+        <div class="settings">
+            <form action="" method="POST">
+                <div>Brightness</div>
+                <div class="brightness-container">
+                    <span>off</span>
+                    <div class="brightness">
+                        <div class="line"></div>
+                        <input id="radio-1" type="radio" name="brightness" value="0" {% if brightness >= 0 %} checked {% endif %}>
+                        <input id="radio-2" type="radio" name="brightness" value="2" {% if brightness >= 2 %} checked {% endif %}>
+                        <input id="radio-3" type="radio" name="brightness" value="130" {% if brightness >= 130 %} checked {% endif %}>
+                        <input id="radio-4" type="radio" name="brightness" value="190" {% if brightness >= 190 %} checked {% endif %}>
+                        <input id="radio-5" type="radio" name="brightness" value="255" {% if brightness >= 255 %} checked {% endif %}>
+                    </div>
+                    <span>max</span>
+                </div>
+                <div>Synchronization</div>
+                <div class="sync-container">
+                    <input type="number" placeholder="{{ sync }}">
+                </div>
+                <div class="btns">
+                    <input type="submit" value="Save">
+                    <a href="{{ url_for('reboot_analyzer') }}"><span>Reboot</span></a>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='analyzer.js') }}"></script>
+{% endblock %}

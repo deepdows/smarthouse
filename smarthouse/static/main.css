@@ -10,7 +10,29 @@ body{
     width: 1200px;
     margin: 0 auto;
 }
+@media screen and (max-width: 1200px) {
+    .container{
+        width: 1000px;
+    }
+}
 
+@media screen and (max-width: 1000px) {
+    .container{
+        width: 768px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .container{
+        width: 600px;
+    }
+}
+@media screen and (max-width: 600px) {
+    .container{
+        width: auto;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
 
 .alert{position:relative;padding:1rem 1rem;margin-bottom:1rem;border:1px solid transparent;border-radius:.25rem}
 .alert-success{color:#0f5132;background-color:#d1e7dd;border-color:#badbcc}

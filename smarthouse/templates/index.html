@@ -4,15 +4,17 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        <div class="analyzer">
-            <a href="{{ url_for('analyzer') }}">
-                <img src="{{ url_for('static', filename='img/analyzer-icon.png') }}" alt="">
-            </a>
-        </div>
-        <div class="smartplug">
-            <a href="">
-                <img src="{{ url_for('static', filename='img/smartplug-icon.svg') }}" alt="">
-            </a>
+        <div class="items">
+            <div class="analyzer">
+                <a href="{{ url_for('analyzer') }}">
+                    <img src="{{ url_for('static', filename='img/analyzer-icon.png') }}" alt="">
+                </a>
+            </div>
+            <div class="smartplug">
+                <a href="">
+                    <img src="{{ url_for('static', filename='img/smartplug-icon.svg') }}" alt="">
+                </a>
+            </div>
         </div>
     </div>
 {% endblock content %}

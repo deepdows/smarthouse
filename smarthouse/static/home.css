@@ -2,9 +2,8 @@
     width: 350px;
     height: 350px;
     background-color: var(--blue3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
     border-radius: 20px;
 }
 .smartplug a:hover, .analyzer a:hover{
@@ -13,9 +12,25 @@
 .smartplug img, .analyzer img{
     width: 200px;
 }
-.container{
+.items{
     display: flex;
     justify-content: space-evenly;
     margin-top: 100px;
     margin-bottom: 70px;
+}
+@media screen and (max-width: 768px) {
+    .smartplug img, .analyzer img{
+        width: 160px;
+    }
+    .smartplug a, .analyzer a{
+        width: 250px;
+        height: 250px;
+    }
+}
+@media screen and (max-width: 600px) {
+    .items{
+        display: grid;
+        row-gap: 20px;
+        margin: 30px auto;
+    }
 }

@@ -136,6 +136,7 @@ input[type=radio]:checked {
     color: #ccc;
 }
 .btns a, .btns input[type=submit]{
+    font-family: Ubuntu;
     width: 48%;
     height: 54px;
     background: none;
@@ -149,6 +150,7 @@ input[type=radio]:checked {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    font-weight: 500;
 }
 .btns{
     margin-top: 20px;
@@ -176,4 +178,57 @@ input[type=radio]:checked {
 }
 #offline::before{
     background: red;
+}
+@media screen and (max-width: 768px) {
+    .units, .name{
+        font-size: 16px;
+    }
+    .value{
+        font-size: 40px;
+        width: 50%;
+        text-align: right;
+        padding-right: 5px;
+    }
+}
+@media screen and (max-width: 600px) {
+    .monitoring{
+        grid-template-columns: repeat(1, 1fr);
+        row-gap: 40px;
+    }
+    .units, .name{
+        font-size: 18px;
+    }
+    .value{
+        font-size: 48px;
+    }
+}
+@media screen and (max-width: 480px) {
+    .settings div:nth-child(1),
+    .settings div:nth-child(3){
+        font-size: 28px;
+    }
+    .settings{
+        width: 100%;
+        min-width: 320px;
+    }
+    .brightness-container span{
+        font-size: 18px;
+    }
+    .btns a, .btns input[type=submit]{
+        font-size: 18px;
+    }
+}
+@media screen and (max-width: 360px) {
+    .monitoring{
+        row-gap: 30px;
+    }
+    .units, .name{
+        font-size: 16px;
+    }
+    .value{
+        font-size: 40px;
+        width: 50%;
+        text-align: right;
+        padding-right: 5px;
+    }
 }

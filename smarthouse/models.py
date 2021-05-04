@@ -14,28 +14,24 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User('{self.id}', '{self.username}')"
 
-class AnalyzerData(db.Model):
+class AnalyzerModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     temperature = db.Column(db.Float, nullable=False)
     humidity = db.Column(db.Integer, nullable=False)
     pressure = db.Column(db.Float, nullable=False)
     co2 = db.Column(db.Integer, nullable=False)
-    date = db.Column(db.Date, nullable=False, 
-                    default=datetime.date.today)
-    time = db.Column(db.Time, nullable=False, 
-                    default=datetime.datetime.now().time())
+    date = db.Column(db.DateTime, nullable=False, 
+                    default=datetime.datetime.now)
 
     def __repr__(self):
-        return (f"User('{self.temperature}', '{self.humidity}'," 
-            + f"'{self.pressure}, '{self.co2}', '{self.date}', '{self.time}')")
+        return (f"User('{self.temperature}', '{self.humidity}', " 
+            + f"'{self.pressure}, '{self.co2}', '{self.date}')")
 
-class SmartplugData(db.Model):
+class SmartplugModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     current = db.Column(db.Float, nullable=False)
-    date = db.Column(db.Date, nullable=False, 
-                    default=datetime.date.today)
-    time = db.Column(db.Time, nullable=False, 
-                    default=datetime.datetime.now().time())
+    date = db.Column(db.DateTime, nullable=False, 
+                    default=datetime.datetime.now)
 
     def __repr__(self):
-        return f"User('{self.current}', '{self.date}', '{self.time}')"
+        return f"User('{self.current}', '{self.date}')"

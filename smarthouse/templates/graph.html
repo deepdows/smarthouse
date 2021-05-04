@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block styles %}
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='graph.css') }}"> -->
+    <style>
+        body{
+            background: none;
+        }
+        #myChart{
+            height: 100%;
+            width: 100%;
+            margin-top: 50px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div id="myChart"></div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script>
+        window.onload = function () {
+
+            var chart = new CanvasJS.Chart("myChart", {
+                animationEnabled: true,
+                zoomEnabled: true,
+                title:{
+                    text: "{{name}}"
+                },
+                axisX:{
+                    minimum: new Date(0,0,0,0,0,0),
+                    maximum: new Date(0,0,1,0,0,0),
+                    valueFormatString: 'HH:mm:ss',
+                },
+                data: [{        
+                    type: "line",
+                    indexLabelFontSize: 16,
+                    xValueFormatString: 'HH:mm:ss',
+                    dataPoints: [
+                        {% for i in data %}
+                            { x: new Date({{ i[0] }}), y: {{ i[1] }} },
+                        {% endfor %}
+                    ]
+                }]
+            });
+            chart.render();
+
+        }
+    </script>
+{% endblock scripts %}

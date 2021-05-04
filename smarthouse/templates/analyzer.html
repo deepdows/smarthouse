@@ -6,7 +6,8 @@
     <div class="container">
         <div class="bar">
             <div id="signal">
-                {% if isOnline %}
+                {% if is_online %}
+                    {{is_online_var}}
                     <span id='online'>Online</span>
                 {% else %}
                     <span id='offline'>Offline</span>
@@ -21,14 +22,14 @@
         </div>
         <div class="monitoring">
             <div class="temp">
-                <div class="value">{{ data['temp'] }}</div>
+                <div class="value">{{ data['temperature'] }}</div>
                 <div class="second-column">
                     <div class="name">Temperature</div>
                     <div class="units">°C</div>
                 </div>
             </div>
             <div class="hum">
-                <div class="value">{{ data['hum'] }}</div>
+                <div class="value">{{ data['humidity'] }}</div>
                 <div class="second-column">
                     <div class="name">Humidity</div>
                     <div class="units">%</div>
@@ -68,7 +69,7 @@
                 </div>
                 <div>Synchronization</div>
                 <div class="sync-container">
-                    <input type="number">
+                    <input type="number" name='sync'>
                 </div>
                 <div class="btns">
                     <input type="submit" value="Save">

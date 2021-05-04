@@ -6,6 +6,7 @@ body{
     margin-top: 10px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 #settings img:nth-child(2){
     display: none;
@@ -154,10 +155,6 @@ input[type=radio]:checked {
     display: flex;
     justify-content: space-between;
 }
-#signal{
-    display: flex;
-    align-items: center;
-}
 #online::before,
 #offline::before{
     content: ' ';
@@ -171,9 +168,11 @@ input[type=radio]:checked {
 #offline{
     font-size: 14px;
     color: white;
+    display: flex;
+    align-items: center;
 }
 #online::before{
-    background: green;
+    background: rgb(0, 111, 0);
 }
 #offline::before{
     background: red;

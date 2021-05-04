@@ -6,7 +6,11 @@
     <div class="container">
         <div class="bar">
             <div id="signal">
-                <img src="{{ url_for('static', filename='img/signal.svg') }}" alt="">
+                {% if isOnline %}
+                    <span id='online'>Online</span>
+                {% else %}
+                    <span id='offline'>Offline</span>
+                {% endif %}
             </div>
             {% if current_user.is_authenticated %}
             <div id="settings">
@@ -53,17 +57,18 @@
                     <span>off</span>
                     <div class="brightness">
                         <div class="line"></div>
-                        <input id="radio-1" type="radio" name="brightness" value="0" {% if brightness >= 0 %} checked {% endif %}>
-                        <input id="radio-2" type="radio" name="brightness" value="2" {% if brightness >= 2 %} checked {% endif %}>
-                        <input id="radio-3" type="radio" name="brightness" value="130" {% if brightness >= 130 %} checked {% endif %}>
-                        <input id="radio-4" type="radio" name="brightness" value="190" {% if brightness >= 190 %} checked {% endif %}>
-                        <input id="radio-5" type="radio" name="brightness" value="255" {% if brightness >= 255 %} checked {% endif %}>
+                        <input type="radio" name="brightness" value="0">
+                        <input type="radio" name="brightness" value="2">
+                        <input type="radio" name="brightness" value="65">
+                        <input type="radio" name="brightness" value="130">
+                        <input type="radio" name="brightness" value="190">
+                        <input type="radio" name="brightness" value="255">
                     </div>
                     <span>max</span>
                 </div>
                 <div>Synchronization</div>
                 <div class="sync-container">
-                    <input type="number" placeholder="{{ sync }}">
+                    <input type="number">
                 </div>
                 <div class="btns">
                     <input type="submit" value="Save">

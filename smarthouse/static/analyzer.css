@@ -10,7 +10,7 @@ body{
 #settings img:nth-child(2){
     display: none;
 }
-#signal img, #settings img{
+#settings img{
     height: 26px;
 }
 .settings{
@@ -153,4 +153,28 @@ input[type=radio]:checked {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
+}
+#signal{
+    display: flex;
+    align-items: center;
+}
+#online::before,
+#offline::before{
+    content: ' ';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+#online,
+#offline{
+    font-size: 14px;
+    color: white;
+}
+#online::before{
+    background: green;
+}
+#offline::before{
+    background: red;
 }

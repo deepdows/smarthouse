@@ -5,6 +5,9 @@ from smarthouse import app, db, bcrypt, api
 from flask_login import login_user, current_user, logout_user
 from flask_restful import Resource, reqparse, abort, fields
 import datetime
+import os
+
+APPID = os.environ.get('APPID')
 
 @app.route('/')
 def index():
@@ -98,13 +101,17 @@ analyzer_get_data.add_argument('api', type=str)
 analyzer_get_settings = reqparse.RequestParser()
 analyzer_get_settings.add_argument('brightness', type=int)
 analyzer_get_settings.add_argument('sync', type=int)
+analyzer_get_settings.add_argument('api', type=str)
+
+analyzer_get_new_settings = reqparse.RequestParser()
+analyzer_get_new_settings.add_argument('api', type=str)
 
 class AnalyzerGettingData(Resource):
     def get(self):
         return jsonify(analyzer_data.data)
     def post(self):
         args = analyzer_get_data.parse_args()
-        if(args and 'api' in args and args['api'] == '1234321'):
+        if(args and 'api' in args and args['api'] == APPID):
             del args['api']
             analyzer_data_post = AnalyzerData(temperature=args['temp'], 
                                humidity=args['hum'], pressure=args['pressure'],
@@ -115,16 +122,18 @@ class AnalyzerGettingData(Resource):
                                     'pressure':args['pressure'], 'co2':args['co2']})
             analyzer_data.set_time(datetime.datetime.now())
             return '', 201
+        return '', 404
 
 class AnalyzerCurrentSettings(Resource):
     def get(self):
         return jsonify(analyzer_data.current_settings)
     def post(self):
         args = analyzer_get_settings.parse_args()
-        if(args and 'api' in args and args['api'] == '1234321'):
+        if(args and 'api' in args and args['api'] == APPID):
             analyzer_data.current_settings({'brightness':args['brightness'], 
                                                 'sync':args['sync']})
             return '', 201
+        return '', 404
 
 def is_online():
     if analyzer_data.time and ((datetime.datetime.now() - analyzer_data.time).total_seconds() < 10):
@@ -138,9 +147,12 @@ class AnalyzerStatus(Resource):
 
 class AnalyzerNewSettings(Resource):
     def get(self):
-        new_settings = analyzer_data.new_settings
-        analyzer_data.set_new_settings({})
-        return new_settings
+        args = analyzer_get_new_settings.parse_args()
+        if(args and 'api' in args and args['api'] == APPID):
+            new_settings = analyzer_data.new_settings
+            analyzer_data.set_new_settings({})
+            return new_settings
+        return '', 404
 
 api.add_resource(AnalyzerGettingData, '/analyzer/data')
 api.add_resource(AnalyzerCurrentSettings, '/analyzer/settings')

@@ -21,34 +21,34 @@
             {% endif %}
         </div>
         <div class="monitoring">
-            <div class="temp">
+            <a href="{{ url_for('graph', name='temperature', day=0) }}" class="temp">
                 <div class="value">{{ data['temperature'] }}</div>
                 <div class="second-column">
                     <div class="name">Temperature</div>
                     <div class="units">°C</div>
                 </div>
-            </div>
-            <div class="hum">
+            </a>
+            <a href="{{ url_for('graph', name='humidity', day=0) }}" class="hum">
                 <div class="value">{{ data['humidity'] }}</div>
                 <div class="second-column">
                     <div class="name">Humidity</div>
                     <div class="units">%</div>
                 </div>
-            </div>
-            <div class="co2">
+            </a>
+            <a href="{{ url_for('graph', name='co2', day=0) }}" class="co2">
                 <div class="value">{{ data['co2'] }}</div>
                 <div class="second-column">
                     <div class="name">CO<sub><small>2</small></sub></div>
                     <div class="units">ppm</div>
                 </div>
-            </div>
-            <div class="pressure">
+            </a>
+            <a href="{{ url_for('graph', name='pressure', day=0) }}" class="pressure">
                 <div class="value">{{ data['pressure'] }}</div>
                 <div class="second-column">
                     <div class="name">Pressure</div>
                     <div class="units">hPa</div>
                 </div>
-            </div>
+            </a>
         </div>
         {% if current_user.is_authenticated %}
         <div class="settings">

@@ -64,21 +64,31 @@ def reboot_analyzer():
     return redirect(url_for('analyzer'))
 
 
-@app.route('/analyzer/graph/<string:name>')
-def graph(name):
+@app.route('/analyzer/graph/<string:name>/<int:day>')
+def graph(name, day):
     names = ['temperature', 'humidity', 'pressure', 'co2']
     if name in names:
         data = []
-        all_data_today = AnalyzerModel.query\
-                            .filter(AnalyzerModel.date > datetime.datetime\
-                            .combine(datetime.datetime.now().date(), 
-                            datetime.time(0, 0))).all()
-        
+        if(day == 0):
+            all_data_today = AnalyzerModel.query\
+                                .filter(AnalyzerModel.date > datetime.datetime\
+                                .combine(datetime.datetime.now().date(), 
+                                datetime.time(0))).all()
+        else:
+            all_data_today = AnalyzerModel.query\
+                                .filter(AnalyzerModel.date < datetime.datetime\
+                                .combine(datetime.datetime.now().date(), 
+                                datetime.time(0))
+                                - datetime.timedelta(days=day-1),
+                                AnalyzerModel.date > datetime.datetime\
+                                .combine(datetime.datetime.now().date(), 
+                                datetime.time(0))
+                                - datetime.timedelta(days=day)).all()
         for data_today in all_data_today:
             data.append([data_today.date.strftime("0, 0, 0, %H, %M, %S"), 
                                                     getattr(data_today, name)])
         return render_template('graph.html', name=name, data=data, 
-                                    title=f'Analyzer - {name}')
+                                            title=f'Analyzer - {name}')
     else:
         flash(f'No graph for {name}', category='danger')
         return redirect(url_for('analyzer'))

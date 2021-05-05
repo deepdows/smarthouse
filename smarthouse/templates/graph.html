@@ -1,6 +1,5 @@
 {% extends 'layout.html' %}
 {% block styles %}
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='graph.css') }}"> -->
     <style>
         body{
             background: none;
@@ -9,6 +8,9 @@
             height: 100%;
             width: 100%;
             margin-top: 50px;
+        }
+        .canvasjs-chart-credit{
+            display: none !important;
         }
     </style>
 {% endblock %}

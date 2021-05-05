@@ -31,8 +31,8 @@
                     text: "{{name}}"
                 },
                 axisX:{
-                    minimum: new Date(0,0,0,0,0,0),
-                    maximum: new Date(0,0,1,0,0,0),
+                    minimum: new Date('{{day[0]}}'),
+                    maximum: new Date('{{day[1]}}'),
                     valueFormatString: 'HH:mm:ss',
                 },
                 data: [{        
@@ -41,7 +41,7 @@
                     xValueFormatString: 'HH:mm:ss',
                     dataPoints: [
                         {% for i in data %}
-                            { x: new Date({{ i[0] }}), y: {{ i[1] }} },
+                            { x: new Date('{{ i[0] }}'), y: {{ i[1] }} },
                         {% endfor %}
                     ]
                 }]

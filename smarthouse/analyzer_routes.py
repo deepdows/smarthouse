@@ -54,7 +54,8 @@ def analyzer():
             analyzer_data.set_new_settings(new_settings)
     data = analyzer_data.data
     return render_template('analyzer.html', data=data, title='Analyzer',
-                            is_online=is_online()['is_online'])
+                        today=datetime.datetime.now().strftime('%Y%m%d'), 
+                        is_online=is_online()['is_online'])
 
 @app.route('/analyzer/reboot')
 def reboot_analyzer():
@@ -64,31 +65,23 @@ def reboot_analyzer():
     return redirect(url_for('analyzer'))
 
 
-@app.route('/analyzer/graph/<string:name>/<int:day>')
+@app.route('/analyzer/graph/<string:name>/<string:day>')
 def graph(name, day):
+    day = datetime.datetime.strptime(day, '%Y%m%d').date()
+    date = datetime.datetime.combine(day, datetime.time(0))
+    one_day_ahead = date + datetime.timedelta(days=1)
     names = ['temperature', 'humidity', 'pressure', 'co2']
     if name in names:
         data = []
-        if(day == 0):
-            all_data_today = AnalyzerModel.query\
-                                .filter(AnalyzerModel.date > datetime.datetime\
-                                .combine(datetime.datetime.now().date(), 
-                                datetime.time(0))).all()
-        else:
-            all_data_today = AnalyzerModel.query\
-                                .filter(AnalyzerModel.date < datetime.datetime\
-                                .combine(datetime.datetime.now().date(), 
-                                datetime.time(0))
-                                - datetime.timedelta(days=day-1),
-                                AnalyzerModel.date > datetime.datetime\
-                                .combine(datetime.datetime.now().date(), 
-                                datetime.time(0))
-                                - datetime.timedelta(days=day)).all()
+        all_data_today = AnalyzerModel.query.filter(AnalyzerModel.date
+                                        .between(date, one_day_ahead)).all()
         for data_today in all_data_today:
-            data.append([data_today.date.strftime("0, 0, 0, %H, %M, %S"), 
-                                                    getattr(data_today, name)])
+            data.append([data_today.date.strftime('%Y-%m-%dT%H:%M:%S'), 
+                                getattr(data_today, name)])
         return render_template('graph.html', name=name, data=data, 
-                                            title=f'Analyzer - {name}')
+                                    day=[date.strftime('%Y-%m-%dT00:00:00'),
+                                    one_day_ahead.strftime('%Y-%m-%dT00:00:00')],
+                                    title=f'Analyzer - {name}')
     else:
         flash(f'No graph for {name}', category='danger')
         return redirect(url_for('analyzer'))

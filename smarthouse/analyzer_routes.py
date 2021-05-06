@@ -12,8 +12,8 @@ APPID = os.environ.get('APPID')
 class Analyzer():
     def __init__(self):
         if(AnalyzerModel.query.first()):
-            self.data = AnalyzerModel.query.order_by(AnalyzerModel.id.desc())\
-                                                            .first().__dict__
+            self.data = AnalyzerModel.query\
+                            .order_by(AnalyzerModel.id.desc()).first().__dict__
             self.time = self.data['date']
             del self.data['date']
             del self.data['_sa_instance_state']
@@ -62,34 +62,38 @@ def analyzer():
 def reboot_analyzer():
     if not current_user.is_authenticated:
         return redirect(url_for('analyzer'))
-    Analyzer.new_settings = {'reboot': True}
+    analyzer_data.new_settings = {'reboot': True}
     return redirect(url_for('analyzer'))
 
 
 @app.route('/analyzer/<string:name>/<string:day>')
 def graph(name, day):
+    if len(day) != 8:
+        flash('Day format is not right')
+        return redirect(url_for('analyzer'))
     day = datetime.datetime.strptime(day, '%Y%m%d').date()
     date = datetime.datetime.combine(day, datetime.time(0))
     one_day_ahead = date + datetime.timedelta(days=1)
     one_day_ago = date - datetime.timedelta(days=1)
     names = ['temperature', 'humidity', 'pressure', 'co2']
-    if name in names:
-        data, time = [], []
-        all_data_today = AnalyzerModel.query.filter(AnalyzerModel.date
-                                        .between(date, one_day_ahead)).all()
-        for data_today in all_data_today:
-            data.append(getattr(data_today, name))
-            time.append(data_today.date.strftime('%H:%M:%S'))
-        return render_template('graph.html', name=name.capitalize(), data=data, 
-                        time=time, title=f'Analyzer - {name.capitalize()}',
-                        one_day_ahead=one_day_ahead.strftime('%Y%m%d'), 
-                        one_day_ago=one_day_ago.strftime('%Y%m%d'),
-                        one_day_ahead_dashed=one_day_ahead.strftime('%Y-%m-%d'), 
-                        one_day_ago_dashed=one_day_ago.strftime('%Y-%m-%d'),
-                        maps=[['Home', 'index'], ['Analyzer', 'analyzer'], name + '/' + day.strftime('%Y-%m-%d')])
-    else:
+    if name not in names:
         flash(f'No graph for {name}', category='danger')
         return redirect(url_for('analyzer'))
+    data, time = [], []
+    all_data_today = AnalyzerModel.query.filter(AnalyzerModel.date
+                                    .between(date, one_day_ahead)).all()
+    for data_today in all_data_today:
+        data.append(getattr(data_today, name))
+        time.append(data_today.date.strftime('%H:%M:%S'))
+    return render_template('graph.html', name=name.capitalize(), data=data, 
+                    time=time, title=f'Analyzer - {name.capitalize()}',
+                    one_day_ahead=one_day_ahead.strftime('%Y%m%d'), 
+                    one_day_ago=one_day_ago.strftime('%Y%m%d'),
+                    one_day_ahead_dashed=one_day_ahead.strftime('%Y-%m-%d'), 
+                    one_day_ago_dashed=one_day_ago.strftime('%Y-%m-%d'),
+                    maps=[['Home', 'index'], ['Analyzer', 'analyzer'], 
+                                    name + '/' + day.strftime('%Y-%m-%d')])
+    
 
 
 # API ANALYZER

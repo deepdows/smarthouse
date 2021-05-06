@@ -1,4 +1,5 @@
-# from flask import render_template, url_for, redirect, request, abort, flash, jsonify
+# from flask import (render_template, url_for, redirect, request, 
+#                                 abort, flash, jsonify)
 # from smarthouse.models import SmartplugModel
 # from smarthouse import app, db, api
 # from flask_login import current_user
@@ -11,11 +12,11 @@
 # class Smartplug():
 #     def __init__(self):
 #         if(SmartplugModel.query.first()):
-#             self.data = SmartplugModel.query.order_by(SmartplugModel.id.desc()).first().__dict__
-#             self.time = datetime.datetime.combine(self.data['date'], self.data['time'])
+#             self.data = SmartplugModel.query\
+#                             .order_by(SmartplugModel.id.desc()).first().__dict__
+#             self.time = self.data['date']
 #             del self.data['date']
 #             del self.data['_sa_instance_state']
-#             del self.data['time']
 #             del self.data['id']
 #         else:
 #             self.data = {}
@@ -34,8 +35,8 @@
 
 # smartplug_data = Smartplug()
 
-# @app.route('/analyzer', methods=['POST', 'GET'])
-# def analyzer():
+# @app.route('/smartplug', methods=['POST', 'GET'])
+# def smartplug():
 #     if current_user.is_authenticated:
 #         if request.method == 'POST':
 #             new_settings = {}
@@ -43,24 +44,56 @@
 #                 new_settings['brightness'] = request.form.get('brightness')
 #             else:
 #                 if analyzer_data.new_settings.get('brightness'):
-#                     new_settings['brightness'] = analyzer_data.new_settings['brightness']
+#                     new_settings['brightness'] = analyzer_data\
+#                                                     .new_settings['brightness']
 #             if request.form.get('sync'):
 #                 new_settings['sync'] = request.form.get('sync')
 #             else:
 #                 if analyzer_data.new_settings.get('sync'):
 #                     new_settings['sync'] = analyzer_data.new_settings['sync']
-#             print(new_settings)
 #             analyzer_data.set_new_settings(new_settings)
 #     data = analyzer_data.data
 #     return render_template('analyzer.html', data=data, title='Analyzer',
-#                             is_online=is_online()['is_online'])
+#                         today=datetime.datetime.now().strftime('%Y%m%d'), 
+#                         is_online=is_online()['is_online'],
+#                         maps=[['Home', 'index'], 'Analyzer'])
 
-# @app.route('/analyzer/reboot')
-# def reboot_analyzer():
+# @app.route('/smartplug/reboot')
+# def reboot_smartplug():
 #     if not current_user.is_authenticated:
+#         return redirect(url_for('smartplug'))
+#     smartplug_data.new_settings = {'reboot': True}
+#     return redirect(url_for('smartplug'))
+
+
+# @app.route('/smartplug/<string:name>/<string:day>')
+# def graph(name, day):
+#     if len(day) != 8:
+#         flash('Day format is not right')
 #         return redirect(url_for('analyzer'))
-#     Analyzer.new_settings = {'reboot': True}
-#     return redirect(url_for('analyzer'))
+#     day = datetime.datetime.strptime(day, '%Y%m%d').date()
+#     date = datetime.datetime.combine(day, datetime.time(0))
+#     one_day_ahead = date + datetime.timedelta(days=1)
+#     one_day_ago = date - datetime.timedelta(days=1)
+#     names = ['temperature', 'humidity', 'pressure', 'co2']
+#     if name not in names:
+#         flash(f'No graph for {name}', category='danger')
+#         return redirect(url_for('analyzer'))
+#     data, time = [], []
+#     all_data_today = SmartplugModel.query.filter(SmartplugModel.date
+#                                     .between(date, one_day_ahead)).all()
+#     for data_today in all_data_today:
+#         data.append(getattr(data_today, name))
+#         time.append(data_today.date.strftime('%H:%M:%S'))
+#     return render_template('graph.html', name=name.capitalize(), data=data, 
+#                     time=time, title=f'Analyzer - {name.capitalize()}',
+#                     one_day_ahead=one_day_ahead.strftime('%Y%m%d'), 
+#                     one_day_ago=one_day_ago.strftime('%Y%m%d'),
+#                     one_day_ahead_dashed=one_day_ahead.strftime('%Y-%m-%d'), 
+#                     one_day_ago_dashed=one_day_ago.strftime('%Y-%m-%d'),
+#                     maps=[['Home', 'index'], ['Analyzer', 'analyzer'], 
+#                                     name + '/' + day.strftime('%Y-%m-%d')])
+    
 
 
 # # API ANALYZER
@@ -87,15 +120,16 @@
 #         args = analyzer_get_data.parse_args()
 #         if(args and 'api' in args and args['api'] == APPID):
 #             del args['api']
-#             analyzer_data_post = AnalyzerModel(temperature=args['temp'], 
-#                                humidity=args['hum'], pressure=args['pressure'],
-#                                co2=args['co2'])
+#             analyzer_data_post = SmartplugModel(temperature=args['temp'], 
+#                                                 humidity=args['hum'], 
+#                                                 pressure=args['pressure'],
+#                                                 co2=args['co2'])
 #             db.session.add(analyzer_data_post)
 #             db.session.commit()
 #             analyzer_data.set_data({'temperature':args['temp'], 
-#                                         'humidity':args['hum'], 
-#                                         'pressure':args['pressure'], 
-#                                         'co2':args['co2']})
+#                                     'humidity':args['hum'], 
+#                                     'pressure':args['pressure'], 
+#                                     'co2':args['co2']})
 #             analyzer_data.set_time(datetime.datetime.now())
 #             return '', 201
 #         return '', 404

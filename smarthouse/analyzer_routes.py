@@ -31,10 +31,13 @@ class Analyzer():
     def set_current_settings(self, current_settings):
         self.current_settings = current_settings
     def set_time(self, time):
+        global test_time1, test_time2
+        test_time1 = time
         self.time = time
+        test_time2 = self.time
 
 analyzer_data = Analyzer()
-
+test_time1, test_time2 = 0, 0
 @app.route('/analyzer', methods=['POST', 'GET'])
 def analyzer():
     if current_user.is_authenticated:
@@ -113,11 +116,12 @@ analyzer_get_settings.add_argument('api', type=str)
 analyzer_get_new_settings = reqparse.RequestParser()
 analyzer_get_new_settings.add_argument('api', type=str)
 
-time = 0
+
 class AnalyzerGettingData(Resource):
     def get(self):
         d = analyzer_data.data
-        d.update({'test': time, 'test2': analyzer_data.time})
+        d.update({'test': datetime.datetime.now(), 'test2': analyzer_data.time, 
+                        'test3': test_time1, 'test4': test_time2})
         return jsonify(d)
     def post(self):
         args = analyzer_get_data.parse_args()
@@ -134,8 +138,6 @@ class AnalyzerGettingData(Resource):
                                     'pressure':args['pressure'], 
                                     'co2':args['co2']})
             analyzer_data.set_time(datetime.datetime.now())
-            global time
-            time = datetime.datetime.now()
             return '', 201
         return '', 404
 

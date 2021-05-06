@@ -113,8 +113,8 @@ analyzer_get_settings.add_argument('api', type=str)
 analyzer_get_new_settings = reqparse.RequestParser()
 analyzer_get_new_settings.add_argument('api', type=str)
 
+time = 0
 class AnalyzerGettingData(Resource):
-    time = 0
     def get(self):
         d = analyzer_data.data
         d.update({'test': time, 'test2': analyzer_data.time})

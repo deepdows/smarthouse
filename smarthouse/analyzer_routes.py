@@ -134,6 +134,7 @@ class AnalyzerGettingData(Resource):
                                     'pressure':args['pressure'], 
                                     'co2':args['co2']})
             analyzer_data.set_time(datetime.datetime.now())
+            global time
             time = datetime.datetime.now()
             return '', 201
         return '', 404

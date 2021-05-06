@@ -18,8 +18,6 @@ class Analyzer():
             del self.data['date']
             del self.data['_sa_instance_state']
             del self.data['id']
-            global count
-            count += 1
         else:
             self.data = {}
             self.time = 0
@@ -34,7 +32,7 @@ class Analyzer():
         self.current_settings = current_settings
     def set_time(self, time):
         self.time = time
-count = 0
+
 analyzer_data = Analyzer()
 
 @app.route('/analyzer', methods=['POST', 'GET'])
@@ -116,9 +114,10 @@ analyzer_get_new_settings = reqparse.RequestParser()
 analyzer_get_new_settings.add_argument('api', type=str)
 
 class AnalyzerGettingData(Resource):
+    time = 0
     def get(self):
         d = analyzer_data.data
-        d.update({'test': count, 'test2': analyzer_data.time})
+        d.update({'test': time, 'test2': analyzer_data.time})
         return jsonify(d)
     def post(self):
         args = analyzer_get_data.parse_args()
@@ -135,6 +134,7 @@ class AnalyzerGettingData(Resource):
                                     'pressure':args['pressure'], 
                                     'co2':args['co2']})
             analyzer_data.set_time(datetime.datetime.now())
+            time = datetime.datetime.now()
             return '', 201
         return '', 404
 
@@ -150,16 +150,14 @@ class AnalyzerCurrentSettings(Resource):
         return '', 404
 
 def is_online():
-    if analyzer_data.time and ((datetime.datetime.now() - analyzer_data.time)\
-                                                        .total_seconds() < 15):
+    if analyzer_data.time and ((datetime.datetime.now() 
+                                - analyzer_data.time).total_seconds() < 15):
         return {'is_online': True}
     else:
         return {'is_online': False}
 
 class AnalyzerStatus(Resource):
     def get(self):
-        print(datetime.datetime.now())
-        print((datetime.datetime.now() - analyzer_data.time).total_seconds())
         return is_online()
 
 class AnalyzerNewSettings(Resource):

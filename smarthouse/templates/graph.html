@@ -1,52 +1,48 @@
 {% extends 'layout.html' %}
 {% block styles %}
-    <style>
-        body{
-            background: none;
-        }
-        #myChart{
-            height: 100%;
-            width: 100%;
-            margin-top: 50px;
-        }
-        .canvasjs-chart-credit{
-            display: none !important;
-        }
-    </style>
+    <link href="{{ url_for('static', filename='graph.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='C3/c3.css') }}" rel="stylesheet">
 {% endblock %}
 {% block content %}
     <div class="container">
         <div id="myChart"></div>
+        <div class="btns">
+            <a href="{{ url_for('graph', name='temperature', day=one_day_ago) }}" class="previous">&#8249; {{one_day_ago_dashed}}</a>
+            <a href="{{ url_for('graph', name='temperature', day=one_day_ahead) }}" class="next">{{one_day_ahead_dashed}} &#8250;</a>
+        </div>
     </div>
 {% endblock content %}
 {% block scripts %}
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="{{ url_for('static', filename='C3/d3.v5.min.js') }}" charset="utf-8"></script>
+    <script src="{{ url_for('static', filename='C3/c3.min.js') }}"></script>
     <script>
-        window.onload = function () {
-
-            var chart = new CanvasJS.Chart("myChart", {
-                animationEnabled: true,
-                zoomEnabled: true,
-                title:{
-                    text: "{{name}}"
-                },
-                axisX:{
-                    minimum: new Date('{{day[0]}}'),
-                    maximum: new Date('{{day[1]}}'),
-                    valueFormatString: 'HH:mm:ss',
-                },
-                data: [{        
-                    type: "line",
-                    indexLabelFontSize: 16,
-                    xValueFormatString: 'HH:mm:ss',
-                    dataPoints: [
-                        {% for i in data %}
-                            { x: new Date('{{ i[0] }}'), y: {{ i[1] }} },
-                        {% endfor %}
-                    ]
-                }]
-            });
-            chart.render();
-        }
+        var chart = c3.generate({
+            bindto: '#myChart',
+            data: {
+                x: 'time',
+                xFormat: '%H:%M:%S',
+                columns: [
+                    ['time', {% for i in time %} '{{ i }}', {% endfor %} ],
+                    ['{{name}}', {% for i in data %} '{{ i }}', {% endfor %}]
+                ],
+                types: {
+                    {{name}}: 'area'
+                }
+            },
+            axis: {
+                x: {
+                    type: 'timeseries',
+                    tick: {
+                        values: ['00:00:00', '04:00:00', '08:00:00', '12:00:00', '16:00:00', '20:00:00', '24:00:00'],
+                        format: '%H:%M:%S'
+                    },
+                    max: '24:00:00',
+                    min: '00:00:00'
+                }
+            },
+            subchart: {
+                show: true
+            }
+        });
     </script>
 {% endblock scripts %}

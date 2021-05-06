@@ -7,7 +7,7 @@ from smarthouse import analyzer_routes, smartplug_routes
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', maps=['Home'])
 
 @app.route('/login', methods=['POST','GET'])
 def login():
@@ -21,7 +21,8 @@ def login():
             return redirect(url_for('index'))
         else:
             flash('Please check username and password', 'danger')
-    return render_template('login.html', title='Login', form=form)
+    return render_template('login.html', title='Login', form=form, 
+                                maps=[['Home', 'index'], 'Login'])
 
 @app.route('/logout')
 def logout():

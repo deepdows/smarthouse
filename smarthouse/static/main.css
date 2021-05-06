@@ -33,11 +33,39 @@ body{
         padding-right: 10px;
     }
 }
-
+@media screen and (max-width: 320px) {
+    .container{
+        width: 300px;
+    }
+}
 .alert{position:relative;padding:1rem 1rem;margin-bottom:1rem;border:1px solid transparent;border-radius:.25rem}
 .alert-success{color:#0f5132;background-color:#d1e7dd;border-color:#badbcc}
-.alert-success .alert-link{color:#0c4128}
 .alert-warning{color:#664d03;background-color:#fff3cd;border-color:#ffecb5}
-.alert-warning .alert-link{color:#523e02}
 .alert-danger{color:#842029;background-color:#f8d7da;border-color:#f5c2c7}
-.alert-danger .alert-link{color:#6a1a21}
+
+nav a{
+    color: #ddd;
+    text-decoration: none;
+    background: #454545;
+    padding: 8px 14px;
+    margin-left: 3px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+nav .before-dir:hover{
+    background: #555;
+}
+nav .current-dir{
+    color: white;
+    background: #cc9560;
+    cursor: alias;
+}
+nav{
+    background: #2f2f2f;
+}
+nav .container{
+    display: flex;
+    flex-wrap: wrap;
+    font-family: Ubuntu;
+    padding: 0 0 5px;
+}

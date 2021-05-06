@@ -115,7 +115,9 @@ analyzer_get_new_settings.add_argument('api', type=str)
 
 class AnalyzerGettingData(Resource):
     def get(self):
-        return jsonify(analyzer_data.data)
+        d = analyzer_data.data
+        d.update({'test': datetime.datetime.now(), 'test2': analyzer_data.time})
+        return jsonify(d)
     def post(self):
         args = analyzer_get_data.parse_args()
         if(args and 'api' in args and args['api'] == APPID):
@@ -154,6 +156,8 @@ def is_online():
 
 class AnalyzerStatus(Resource):
     def get(self):
+        print(datetime.datetime.now())
+        print((datetime.datetime.now() - analyzer_data.time).total_seconds())
         return is_online()
 
 class AnalyzerNewSettings(Resource):

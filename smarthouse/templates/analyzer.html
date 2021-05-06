@@ -20,9 +20,9 @@
             </div>
             {% endif %}
         </div>
+        <div id="test"></div>
+        <div id="test2"></div>
         <div class="monitoring">
-            <span id="test"></span>
-            <span id="test2"></span>
             <a href="{{ url_for('graph', name='temperature', day=today) }}" class="temp">
                 <div class="value">{{ data['temperature'] }}</div>
                 <div class="second-column">

@@ -32,6 +32,7 @@ class Analyzer():
         self.current_settings = current_settings
     def set_time(self, time):
         self.time = time
+        print(time)
 
 analyzer_data = Analyzer()
 
@@ -132,6 +133,7 @@ class AnalyzerGettingData(Resource):
                                     'pressure':args['pressure'], 
                                     'co2':args['co2']})
             analyzer_data.set_time(datetime.datetime.now())
+            print(datetime.datetime.now())
             return '', 201
         return '', 404
 

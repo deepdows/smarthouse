@@ -23,6 +23,7 @@ class Analyzer():
             self.time = 0
         self.new_settings = {}
         self.current_settings = {}
+        self.count = 0
 
     def set_data(self, data):
         self.data = data

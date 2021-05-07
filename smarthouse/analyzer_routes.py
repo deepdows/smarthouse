@@ -35,12 +35,13 @@ class Analyzer():
         global test_time1
         test_time1 = time
         self.time = time
-    def count(self):
+    def set_count(self):
         self.count += 1
 
 test_time1 = 0
 analyzer_data = Analyzer()
-analyzer_data.count()
+analyzer_data.set_count()
+
 @app.route('/analyzer', methods=['POST', 'GET'])
 def analyzer():
     if current_user.is_authenticated:

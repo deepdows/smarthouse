@@ -12,9 +12,6 @@ $(function() {
                 $('.hum .value').text(data['humidity']);
                 $('.pressure .value').text(data['pressure'].toFixed(1));
                 $('.co2 .value').text(data['co2']);
-                $('#test').text(data['test']);
-                $('#test2').text(data['test2']);
-                $('#test3').text(data['test3']);
             }
         });
         $.ajax({

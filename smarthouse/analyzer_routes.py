@@ -10,7 +10,7 @@ import os
 APPID = os.environ.get('APPID')
 
 class Analyzer():
-    def __init__(self):
+    def init(self):
         if(AnalyzerModel.query.first()):
             self.data = AnalyzerModel.query\
                             .order_by(AnalyzerModel.id.desc()).first().__dict__
@@ -38,7 +38,7 @@ class Analyzer():
         self.time = time
 
 test_time1 = 0
-analyzer_data = Analyzer()
+analyzer_data = Analyzer().init()
 
 @app.route('/analyzer', methods=['POST', 'GET'])
 def analyzer():

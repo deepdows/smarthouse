@@ -127,6 +127,7 @@ class AnalyzerGettingData(Resource):
         return jsonify(d)
     def post(self):
         args = analyzer_get_data.parse_args()
+        print(args)
         if(args and 'api' in args and args['api'] == APPID):
             del args['api']
             analyzer_data_post = AnalyzerModel(temperature=args['temp'], 
@@ -178,14 +179,3 @@ api.add_resource(AnalyzerGettingData, '/analyzer/data')
 api.add_resource(AnalyzerCurrentSettings, '/analyzer/settings')
 api.add_resource(AnalyzerStatus, '/analyzer/status')
 api.add_resource(AnalyzerNewSettings, '/analyzer/new_settings')
-
-
-analyzer_test = reqparse.RequestParser()
-analyzer_test.add_argument('test', type=str)
-
-class Test(Resource):
-    def post(self):
-        args = analyzer_test.parse_args()
-        return args
-
-api.add_resource(Test, '/analyzer/test')

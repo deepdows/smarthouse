@@ -128,6 +128,8 @@ class AnalyzerGettingData(Resource):
     def post(self):
         args = analyzer_get_data.parse_args()
         print(args)
+        print(APPID)
+        print(APPID == args['api'])
         if(args and 'api' in args and args['api'] == APPID):
             del args['api']
             analyzer_data_post = AnalyzerModel(temperature=args['temp'], 

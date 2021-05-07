@@ -38,7 +38,8 @@ class Analyzer():
         self.time = time
 
 test_time1 = 0
-analyzer_data = Analyzer().init()
+analyzer_data = Analyzer()
+analyzer_data.init()
 
 @app.route('/analyzer', methods=['POST', 'GET'])
 def analyzer():

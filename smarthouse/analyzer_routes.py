@@ -130,17 +130,17 @@ def analyzer_data_api():
 
 # API ANALYZER
 
-analyzer_get_data = reqparse.RequestParser()
-analyzer_get_data.add_argument('temp', type=float)
-analyzer_get_data.add_argument('hum', type=int)
-analyzer_get_data.add_argument('pressure', type=float)
-analyzer_get_data.add_argument('co2', type=int)
-analyzer_get_data.add_argument('api', type=str)
+# analyzer_get_data = reqparse.RequestParser()
+# analyzer_get_data.add_argument('temp', type=float)
+# analyzer_get_data.add_argument('hum', type=int)
+# analyzer_get_data.add_argument('pressure', type=float)
+# analyzer_get_data.add_argument('co2', type=int)
+# analyzer_get_data.add_argument('api', type=str)
 
-analyzer_get_settings = reqparse.RequestParser()
-analyzer_get_settings.add_argument('brightness', type=int)
-analyzer_get_settings.add_argument('sync', type=int)
-analyzer_get_settings.add_argument('api', type=str)
+# analyzer_get_settings = reqparse.RequestParser()
+# analyzer_get_settings.add_argument('brightness', type=int)
+# analyzer_get_settings.add_argument('sync', type=int)
+# analyzer_get_settings.add_argument('api', type=str)
 
 
 # class AnalyzerGettingData(Resource):
@@ -165,16 +165,16 @@ analyzer_get_settings.add_argument('api', type=str)
 #             return '', 201
 #         return '', 404
 
-class AnalyzerCurrentSettings(Resource):
-    def get(self):
-        return jsonify(analyzer_data.current_settings)
-    def post(self):
-        args = analyzer_get_settings.parse_args()
-        if(args and 'api' in args and args['api'] == APPID):
-            analyzer_data.current_settings({'brightness':args['brightness'], 
-                                                'sync':args['sync']})
-            return '', 202
-        return '', 404
+# class AnalyzerCurrentSettings(Resource):
+#     def get(self):
+#         return jsonify(analyzer_data.current_settings)
+#     def post(self):
+#         args = analyzer_get_settings.parse_args()
+#         if(args and 'api' in args and args['api'] == APPID):
+#             analyzer_data.current_settings({'brightness':args['brightness'], 
+#                                                 'sync':args['sync']})
+#             return '', 202
+#         return '', 404
 
 def is_online():
     if analyzer_data.time and ((datetime.datetime.now() 
@@ -187,16 +187,16 @@ def is_online():
 #     def get(self):
 #         return is_online()
 
-class AnalyzerNewSettings(Resource):
-    def get(self):
-        args = analyzer_get_data.parse_args()
-        if(args and 'api' in args and args['api'] == APPID):
-            new_settings = analyzer_data.new_settings
-            analyzer_data.set_new_settings({})
-            return new_settings
-        return '', 404
+# class AnalyzerNewSettings(Resource):
+#     def get(self):
+#         args = analyzer_get_data.parse_args()
+#         if(args and 'api' in args and args['api'] == APPID):
+#             new_settings = analyzer_data.new_settings
+#             analyzer_data.set_new_settings({})
+#             return new_settings
+#         return '', 404
 
 # api.add_resource(AnalyzerGettingData, '/analyzer/data')
-api.add_resource(AnalyzerCurrentSettings, '/analyzer/settings')
+# api.add_resource(AnalyzerCurrentSettings, '/analyzer/settings')
 # api.add_resource(AnalyzerStatus, '/analyzer/status')
-api.add_resource(AnalyzerNewSettings, '/analyzer/new_settings')
+# api.add_resource(AnalyzerNewSettings, '/analyzer/new_settings')

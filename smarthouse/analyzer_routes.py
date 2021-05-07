@@ -33,14 +33,12 @@ class Analyzer():
         self.current_settings = current_settings
     def set_time(self, time):
         global test_time1
+        self.count += 1
         test_time1 = time
         self.time = time
-    def set_count(self):
-        self.count += 1
 
 test_time1 = 0
 analyzer_data = Analyzer()
-analyzer_data.set_count()
 
 @app.route('/analyzer', methods=['POST', 'GET'])
 def analyzer():
@@ -124,7 +122,7 @@ analyzer_get_new_settings.add_argument('api', type=str)
 class AnalyzerGettingData(Resource):
     def get(self):
         d = analyzer_data.data
-        d.update({'test': datetime.datetime.now(), 'test2': analyzer_data.time, 
+        d.update({'test': analyzer_data.time, 'test2': test_time1, 
                         'test3': analyzer_data.count})
         return jsonify(d)
     def post(self):

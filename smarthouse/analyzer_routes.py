@@ -23,7 +23,6 @@ class Analyzer():
             self.time = 0
         self.new_settings = {}
         self.current_settings = {}
-        self.count = 0
 
     def set_data(self, data):
         self.data = data
@@ -32,12 +31,8 @@ class Analyzer():
     def set_current_settings(self, current_settings):
         self.current_settings = current_settings
     def set_time(self, time):
-        global test_time1
-        self.count += 1
-        test_time1 = time
         self.time = time
 
-test_time1 = 0
 analyzer_data = Analyzer()
 
 @app.route('/analyzer', methods=['POST', 'GET'])
@@ -121,15 +116,9 @@ analyzer_get_new_settings.add_argument('api', type=str)
 
 class AnalyzerGettingData(Resource):
     def get(self):
-        d = analyzer_data.data
-        d.update({'test': analyzer_data.time, 'test2': test_time1, 
-                        'test3': analyzer_data.count})
-        return jsonify(d)
+        return jsonify(analyzer_data.data)
     def post(self):
         args = analyzer_get_data.parse_args()
-        print(args)
-        print(APPID)
-        print(APPID == args['api'])
         if(args and 'api' in args and args['api'] == APPID):
             del args['api']
             analyzer_data_post = AnalyzerModel(temperature=args['temp'], 

@@ -95,6 +95,37 @@ def graph(name, day):
                     maps=[['Home', 'index'], ['Analyzer', 'analyzer'], 
                                     name + '/' + day.strftime('%Y-%m-%d')])
     
+@app.route('/analyzer/status', methods=['POST', 'GET'])
+def analyzer_status_api():
+    if request.method == 'GET':
+        return is_online()
+
+@app.route('/analyzer/data', methods=['POST', 'GET'])
+def analyzer_data_api():
+    if request.method == 'GET':
+        return jsonify(analyzer_data.data)
+    if request.method == 'POST':
+        if request.json:
+            args = request.json
+        else:
+            return 'Not json', 404
+        if(args and 'api' in args and args['api'] == APPID):
+            del args['api']
+            analyzer_data_post = AnalyzerModel(temperature=args['temp'], 
+                                                humidity=args['hum'], 
+                                                pressure=args['pressure'],
+                                                co2=args['co2'])
+            db.session.add(analyzer_data_post)
+            db.session.commit()
+            analyzer_data.set_data({'temperature':args['temp'], 
+                                    'humidity':args['hum'], 
+                                    'pressure':args['pressure'], 
+                                    'co2':args['co2']})
+            analyzer_data.set_time(datetime.datetime.now())
+            print(datetime.datetime.now())
+            return 'Data created', 201
+        return 'api is absent or incorrect', 404
+
 
 
 # API ANALYZER
@@ -111,31 +142,28 @@ analyzer_get_settings.add_argument('brightness', type=int)
 analyzer_get_settings.add_argument('sync', type=int)
 analyzer_get_settings.add_argument('api', type=str)
 
-analyzer_get_new_settings = reqparse.RequestParser()
-analyzer_get_new_settings.add_argument('api', type=str)
 
-
-class AnalyzerGettingData(Resource):
-    def get(self):
-        return jsonify(analyzer_data.data)
-    def post(self):
-        args = analyzer_get_data.parse_args()
-        if(args and 'api' in args and args['api'] == APPID):
-            del args['api']
-            analyzer_data_post = AnalyzerModel(temperature=args['temp'], 
-                                                humidity=args['hum'], 
-                                                pressure=args['pressure'],
-                                                co2=args['co2'])
-            db.session.add(analyzer_data_post)
-            db.session.commit()
-            analyzer_data.set_data({'temperature':args['temp'], 
-                                    'humidity':args['hum'], 
-                                    'pressure':args['pressure'], 
-                                    'co2':args['co2']})
-            analyzer_data.set_time(datetime.datetime.now())
-            print(datetime.datetime.now())
-            return '', 201
-        return '', 404
+# class AnalyzerGettingData(Resource):
+#     def get(self):
+#         return jsonify(analyzer_data.data)
+#     def post(self):
+#         args = analyzer_get_data.parse_args()
+#         if(args and 'api' in args and args['api'] == APPID):
+#             del args['api']
+#             analyzer_data_post = AnalyzerModel(temperature=args['temp'], 
+#                                                 humidity=args['hum'], 
+#                                                 pressure=args['pressure'],
+#                                                 co2=args['co2'])
+#             db.session.add(analyzer_data_post)
+#             db.session.commit()
+#             analyzer_data.set_data({'temperature':args['temp'], 
+#                                     'humidity':args['hum'], 
+#                                     'pressure':args['pressure'], 
+#                                     'co2':args['co2']})
+#             analyzer_data.set_time(datetime.datetime.now())
+#             print(datetime.datetime.now())
+#             return '', 201
+#         return '', 404
 
 class AnalyzerCurrentSettings(Resource):
     def get(self):
@@ -155,20 +183,20 @@ def is_online():
     else:
         return {'is_online': False}
 
-class AnalyzerStatus(Resource):
-    def get(self):
-        return is_online()
+# class AnalyzerStatus(Resource):
+#     def get(self):
+#         return is_online()
 
 class AnalyzerNewSettings(Resource):
     def get(self):
-        args = analyzer_get_new_settings.parse_args()
+        args = analyzer_get_data.parse_args()
         if(args and 'api' in args and args['api'] == APPID):
             new_settings = analyzer_data.new_settings
             analyzer_data.set_new_settings({})
             return new_settings
         return '', 404
 
-api.add_resource(AnalyzerGettingData, '/analyzer/data')
+# api.add_resource(AnalyzerGettingData, '/analyzer/data')
 api.add_resource(AnalyzerCurrentSettings, '/analyzer/settings')
-api.add_resource(AnalyzerStatus, '/analyzer/status')
+# api.add_resource(AnalyzerStatus, '/analyzer/status')
 api.add_resource(AnalyzerNewSettings, '/analyzer/new_settings')

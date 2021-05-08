@@ -113,7 +113,8 @@ def graph(name, day):
     min_y=0
     if data:
         min_y = min(data)
-    return render_template('graph.html', name=name.capitalize(), data=data, 
+    return render_template('graph.html', name=name.capitalize(), 
+                name_lower=name, data=data, 
                 time=time, title=f'Analyzer - {name.capitalize()}',
                 one_day_ahead=one_day_ahead.strftime('%Y%m%d'), 
                 one_day_ago=one_day_ago.strftime('%Y%m%d'), min_y=min_y,

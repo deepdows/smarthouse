@@ -37,13 +37,13 @@ class Analyzer():
 analyzer_data = Analyzer()
 
 def add_new_setting_analyzer(name_of_arg):
-    new_setting = {}
+    new_settings = {}
     if request.form.get(name_of_arg):
         new_settings[name_of_arg] = request.form.get(name_of_arg)
     else:
         if analyzer_data.new_settings.get(name_of_arg):
             new_settings[name_of_arg] = analyzer_data.new_settings[name_of_arg]
-    return new_setting
+    return new_settings
 
 @app.route('/analyzer', methods=['POST', 'GET'])
 def analyzer():

@@ -66,7 +66,7 @@ def reboot_analyzer():
     analyzer_data.new_settings = {'reboot': True}
     return redirect(url_for('analyzer'))
 
-avg = lambda l: round(sum(l)/len(l),1)
+avg = lambda l: round(sum(l)/len(l),2)
 
 def get_data_with_unique_time(time, data):
     if len(time) != len(data):

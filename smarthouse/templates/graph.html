@@ -7,8 +7,8 @@
     <div class="container">
         <div id="myChart"></div>
         <div class="btns">
-            <a href="{{ url_for('graph', name='temperature', day=one_day_ago) }}" class="previous">&#8249; {{one_day_ago_dashed}}</a>
-            <a href="{{ url_for('graph', name='temperature', day=one_day_ahead) }}" class="next">{{one_day_ahead_dashed}} &#8250;</a>
+            <a href="{{ url_for('graph', name='{{name}}', day=one_day_ago) }}" class="previous">&#8249; {{one_day_ago_dashed}}</a>
+            <a href="{{ url_for('graph', name='{{name}}', day=one_day_ahead) }}" class="next">{{one_day_ahead_dashed}} &#8250;</a>
         </div>
     </div>
 {% endblock content %}

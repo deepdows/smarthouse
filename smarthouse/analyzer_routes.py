@@ -51,7 +51,7 @@ def analyzer():
         if request.method == 'POST':
             new_settings = {}
             new_settings.update(add_new_setting_analyzer('brightness'))
-            new_settings.update(add_new_setting_analyzer('sync'))
+            new_settings.update(add_new_setting_analyzer('zero'))
             analyzer_data.set_new_settings(new_settings)
     data = analyzer_data.data
     return render_template('analyzer.html', data=data, title='Analyzer',

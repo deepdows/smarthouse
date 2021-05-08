@@ -36,22 +36,22 @@ class Analyzer():
 
 analyzer_data = Analyzer()
 
+def add_new_setting_analyzer(name_of_arg):
+    new_setting = {}
+    if request.form.get(name_of_arg):
+        new_settings[name_of_arg] = request.form.get(name_of_arg)
+    else:
+        if analyzer_data.new_settings.get(name_of_arg):
+            new_settings[name_of_arg] = analyzer_data.new_settings[name_of_arg]
+    return new_setting
+
 @app.route('/analyzer', methods=['POST', 'GET'])
 def analyzer():
     if current_user.is_authenticated:
         if request.method == 'POST':
             new_settings = {}
-            if request.form.get('brightness'):
-                new_settings['brightness'] = request.form.get('brightness')
-            else:
-                if analyzer_data.new_settings.get('brightness'):
-                    new_settings['brightness'] = analyzer_data\
-                                                    .new_settings['brightness']
-            if request.form.get('sync'):
-                new_settings['sync'] = request.form.get('sync')
-            else:
-                if analyzer_data.new_settings.get('sync'):
-                    new_settings['sync'] = analyzer_data.new_settings['sync']
+            new_settings.update(add_new_setting_analyzer('brightness'))
+            new_settings.update(add_new_setting_analyzer('sync'))
             analyzer_data.set_new_settings(new_settings)
     data = analyzer_data.data
     return render_template('analyzer.html', data=data, title='Analyzer',
@@ -66,6 +66,28 @@ def reboot_analyzer():
     analyzer_data.new_settings = {'reboot': True}
     return redirect(url_for('analyzer'))
 
+avg = lambda l: sum(l)/ len(l)
+
+def get_data_with_unique_time(time, data):
+    if len(time) != len(data):
+        error_message = f'Length of lists are different: {len(time)} != {len(data)}'
+        raise Exception(error_message)
+    indices = []
+    set_of_time = []
+    set_of_data = []
+    for i in time:
+        if i not in set_of_time:
+            set_of_time.append(i)
+    for i in set_of_time:
+        indices.append(time.index(i))
+    length = len(indices)
+    for i in range(length):
+        if(i == length - 1):
+            set_of_data.append(avg(data[indices[i]:]))
+        else:
+            set_of_data.append(avg(data[indices[i]:indices[i+1]]))
+            
+    return [set_of_time, set_of_data]
 
 @app.route('/analyzer/<string:name>/<string:day>')
 def graph(name, day):
@@ -81,34 +103,47 @@ def graph(name, day):
         flash(f'No graph for {name}', category='danger')
         return redirect(url_for('analyzer'))
     data, time = [], []
-    all_data_today = AnalyzerModel.query.filter(AnalyzerModel.date
+    all_data = AnalyzerModel.query.filter(AnalyzerModel.date
                                     .between(date, one_day_ahead)).all()
-    for data_today in all_data_today:
-        data.append(getattr(data_today, name))
-        time.append(data_today.date.strftime('%H:%M:%S'))
+    for data in all_data:
+        data.append(getattr(data, name))
+        time.append(data.date.strftime('%H:%M'))
+    time, data = get_data_with_unique_time(time, data)
     return render_template('graph.html', name=name.capitalize(), data=data, 
-                    time=time, title=f'Analyzer - {name.capitalize()}',
-                    one_day_ahead=one_day_ahead.strftime('%Y%m%d'), 
-                    one_day_ago=one_day_ago.strftime('%Y%m%d'),
-                    one_day_ahead_dashed=one_day_ahead.strftime('%Y-%m-%d'), 
-                    one_day_ago_dashed=one_day_ago.strftime('%Y-%m-%d'),
-                    maps=[['Home', 'index'], ['Analyzer', 'analyzer'], 
-                                    name + '/' + day.strftime('%Y-%m-%d')])
+                time=time, title=f'Analyzer - {name.capitalize()}',
+                one_day_ahead=one_day_ahead.strftime('%Y%m%d'), 
+                one_day_ago=one_day_ago.strftime('%Y%m%d'), min_y= min(data),
+                one_day_ahead_dashed=one_day_ahead.strftime('%Y-%m-%d'), 
+                one_day_ago_dashed=one_day_ago.strftime('%Y-%m-%d'),
+                maps=[['Home', 'index'], ['Analyzer', 'analyzer'], 
+                                name + '/' + day.strftime('%Y-%m-%d')])
     
 @app.route('/analyzer/status', methods=['POST', 'GET'])
 def analyzer_status_api():
     if request.method == 'GET':
         return is_online()
 
-@app.route('/analyzer/data', methods=['POST', 'GET'])
-def analyzer_data_api():
-    if request.method == 'GET':
+
+# API ANALYZER
+
+analyzer_get_data = reqparse.RequestParser()
+analyzer_get_data.add_argument('temp', type=float)
+analyzer_get_data.add_argument('hum', type=int)
+analyzer_get_data.add_argument('pressure', type=float)
+analyzer_get_data.add_argument('co2', type=int)
+analyzer_get_data.add_argument('api', type=str)
+
+analyzer_get_settings = reqparse.RequestParser()
+analyzer_get_settings.add_argument('brightness', type=int)
+analyzer_get_settings.add_argument('sync', type=int)
+analyzer_get_settings.add_argument('api', type=str)
+
+
+class AnalyzerGettingData(Resource):
+    def get(self):
         return jsonify(analyzer_data.data)
-    if request.method == 'POST':
-        if request.json:
-            args = request.json
-        else:
-            return 'Not json', 404
+    def post(self):
+        args = analyzer_get_data.parse_args()
         if(args and 'api' in args and args['api'] == APPID):
             del args['api']
             analyzer_data_post = AnalyzerModel(temperature=args['temp'], 
@@ -123,58 +158,19 @@ def analyzer_data_api():
                                     'co2':args['co2']})
             analyzer_data.set_time(datetime.datetime.now())
             print(datetime.datetime.now())
-            return 'Data created', 201
-        return 'api is absent or incorrect', 404
+            return '', 201
+        return 'apiid is absent or incorrect', 404
 
-
-
-# API ANALYZER
-
-# analyzer_get_data = reqparse.RequestParser()
-# analyzer_get_data.add_argument('temp', type=float)
-# analyzer_get_data.add_argument('hum', type=int)
-# analyzer_get_data.add_argument('pressure', type=float)
-# analyzer_get_data.add_argument('co2', type=int)
-# analyzer_get_data.add_argument('api', type=str)
-
-# analyzer_get_settings = reqparse.RequestParser()
-# analyzer_get_settings.add_argument('brightness', type=int)
-# analyzer_get_settings.add_argument('sync', type=int)
-# analyzer_get_settings.add_argument('api', type=str)
-
-
-# class AnalyzerGettingData(Resource):
-#     def get(self):
-#         return jsonify(analyzer_data.data)
-#     def post(self):
-#         args = analyzer_get_data.parse_args()
-#         if(args and 'api' in args and args['api'] == APPID):
-#             del args['api']
-#             analyzer_data_post = AnalyzerModel(temperature=args['temp'], 
-#                                                 humidity=args['hum'], 
-#                                                 pressure=args['pressure'],
-#                                                 co2=args['co2'])
-#             db.session.add(analyzer_data_post)
-#             db.session.commit()
-#             analyzer_data.set_data({'temperature':args['temp'], 
-#                                     'humidity':args['hum'], 
-#                                     'pressure':args['pressure'], 
-#                                     'co2':args['co2']})
-#             analyzer_data.set_time(datetime.datetime.now())
-#             print(datetime.datetime.now())
-#             return '', 201
-#         return '', 404
-
-# class AnalyzerCurrentSettings(Resource):
-#     def get(self):
-#         return jsonify(analyzer_data.current_settings)
-#     def post(self):
-#         args = analyzer_get_settings.parse_args()
-#         if(args and 'api' in args and args['api'] == APPID):
-#             analyzer_data.current_settings({'brightness':args['brightness'], 
-#                                                 'sync':args['sync']})
-#             return '', 202
-#         return '', 404
+class AnalyzerCurrentSettings(Resource):
+    def get(self):
+        return jsonify(analyzer_data.current_settings)
+    def post(self):
+        args = analyzer_get_settings.parse_args()
+        if(args and 'api' in args and args['api'] == APPID):
+            analyzer_data.current_settings({'brightness':args['brightness'], 
+                                                'sync':args['sync']})
+            return '', 202
+        return '', 404
 
 def is_online():
     if analyzer_data.time and ((datetime.datetime.now() 
@@ -183,20 +179,20 @@ def is_online():
     else:
         return {'is_online': False}
 
-# class AnalyzerStatus(Resource):
-#     def get(self):
-#         return is_online()
+class AnalyzerStatus(Resource):
+    def get(self):
+        return is_online()
 
-# class AnalyzerNewSettings(Resource):
-#     def get(self):
-#         args = analyzer_get_data.parse_args()
-#         if(args and 'api' in args and args['api'] == APPID):
-#             new_settings = analyzer_data.new_settings
-#             analyzer_data.set_new_settings({})
-#             return new_settings
-#         return '', 404
+class AnalyzerNewSettings(Resource):
+    def get(self):
+        args = analyzer_get_data.parse_args()
+        if(args and 'api' in args and args['api'] == APPID):
+            new_settings = analyzer_data.new_settings
+            analyzer_data.set_new_settings({})
+            return new_settings
+        return '', 404
 
-# api.add_resource(AnalyzerGettingData, '/analyzer/data')
-# api.add_resource(AnalyzerCurrentSettings, '/analyzer/settings')
-# api.add_resource(AnalyzerStatus, '/analyzer/status')
-# api.add_resource(AnalyzerNewSettings, '/analyzer/new_settings')
+api.add_resource(AnalyzerGettingData, '/analyzer/data')
+api.add_resource(AnalyzerCurrentSettings, '/analyzer/settings')
+api.add_resource(AnalyzerStatus, '/analyzer/status')
+api.add_resource(AnalyzerNewSettings, '/analyzer/new_settings')

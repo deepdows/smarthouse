@@ -22,7 +22,7 @@
                 x: 'time',
                 xFormat: '%H:%M:%S',
                 columns: [
-                    ['time', {% for i in time %} '{{ i }}', {% endfor %} ],
+                    ['time', {% for i in time %} '{{ i }}:00', {% endfor %} ],
                     ['{{name}}', {% for i in data %} '{{ i }}', {% endfor %}]
                 ],
                 types: {
@@ -33,12 +33,12 @@
                 x: {
                     type: 'timeseries',
                     tick: {
-                        values: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                        values: ['00:00:00', '04:00:00', '08:00:00', '12:00:00', '16:00:00', '20:00:00', '24:00:00'],
                         format: '%H:%M'
                     },
                     max: '24:00:00',
                     min: '00:00:00'
-                }
+                },
                 y: {
                     min: '{{ min_y }}'
                 }

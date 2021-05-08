@@ -105,9 +105,9 @@ def graph(name, day):
     data, time = [], []
     all_data = AnalyzerModel.query.filter(AnalyzerModel.date
                                     .between(date, one_day_ahead)).all()
-    for data in all_data:
-        data.append(getattr(data, name))
-        time.append(data.date.strftime('%H:%M'))
+    for single_data in all_data:
+        data.append(getattr(single_data, name))
+        time.append(single_data.date.strftime('%H:%M'))
     time, data = get_data_with_unique_time(time, data)
     print(data)
     min_y=0

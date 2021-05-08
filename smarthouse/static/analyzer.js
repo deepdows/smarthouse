@@ -43,7 +43,7 @@ $(function() {
                         child = 5;
                     else if(data['brightness'] >= 255)
                         child = 6;
-                    $('.settings .brightness input:nth-child('+child+')').attr("checked", "true");
+                    $('#radio'+child).attr("checked", "true");
                     $('.settings .sync-container input').attr("placeholder", data['sync']);
                 }
             }

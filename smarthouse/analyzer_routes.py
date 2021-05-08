@@ -172,7 +172,7 @@ class AnalyzerCurrentSettings(Resource):
     def post(self):
         args = analyzer_get_settings.parse_args()
         if(args and 'api' in args and args['api'] == APPID):
-            analyzer_data.current_settings({'brightness':args['brightness'], 
+            analyzer_data.set_current_settings({'brightness':args['brightness'], 
                                                 'sync':args['sync']})
             return '', 202
         return '', 404

@@ -190,12 +190,9 @@ class AnalyzerStatus(Resource):
 
 class AnalyzerNewSettings(Resource):
     def get(self):
-        args = analyzer_get_data.parse_args()
-        if(args and 'api' in args and args['api'] == APPID):
-            new_settings = analyzer_data.new_settings
-            analyzer_data.set_new_settings({})
-            return new_settings
-        return '', 404
+        new_settings = analyzer_data.new_settings
+        analyzer_data.set_new_settings({})
+        return new_settings
 
 api.add_resource(AnalyzerGettingData, '/analyzer/data')
 api.add_resource(AnalyzerCurrentSettings, '/analyzer/settings')

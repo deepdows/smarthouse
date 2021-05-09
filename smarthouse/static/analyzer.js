@@ -31,18 +31,18 @@ $(function() {
             dataType: 'json',
             success: function(data){
                 if(!$.isEmptyObject(data)){
-                    console.log(data['brightness']);
-                    if(2 > data['brightness'] >= 0)
+                    var brightness = data['brightness'];
+                    if(2 > brightness && brightness >= 0)
                         child = 1;
-                    else if(65 > data['brightness'] >= 2)
+                    else if(65 > brightness && brightness >= 2)
                         child = 2;
-                    else if(130 > data['brightness'] >= 65)
+                    else if(130 > brightness && brightness >= 65)
                         child = 3;
-                    else if(190 > data['brightness'] >= 130)
+                    else if(190 > brightness && brightness >= 130)
                         child = 4;
-                    else if(data['brightness'] >= 190)
+                    else if(255 > brightness && brightness >= 190)
                         child = 5;
-                    else if(data['brightness'] >= 255)
+                    else if(brightness >= 255)
                         child = 6;
                     $('#radio'+child).attr("checked", "true");
                     $('.settings .sync-container input').attr("placeholder", data['sync']);

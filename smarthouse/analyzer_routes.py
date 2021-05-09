@@ -111,14 +111,14 @@ def graph(name, day):
         time.append(single_data.date.strftime('%H:%M'))
     time, data = get_data_with_unique_time(time, data)
     print(data)
-    min_y=0.5
+    min_y=0
     if data:
-        min_y += min(data)
+        min_y = min(data)
     return render_template('graph.html', name=name.capitalize(), 
                 name_lower=name, data=data, 
                 time=time, title=f'Analyzer - {name.capitalize()}',
                 one_day_ahead=one_day_ahead.strftime('%Y%m%d'), 
-                one_day_ago=one_day_ago.strftime('%Y%m%d'), min_y=min_y,
+                one_day_ago=one_day_ago.strftime('%Y%m%d'), min_y=min_y+0.5,
                 one_day_ahead_dashed=one_day_ahead.strftime('%Y-%m-%d'), 
                 one_day_ago_dashed=one_day_ago.strftime('%Y-%m-%d'),
                 maps=[['Home', 'index'], ['Analyzer', 'analyzer'], 

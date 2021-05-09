@@ -111,9 +111,9 @@ def graph(name, day):
         time.append(single_data.date.strftime('%H:%M'))
     time, data = get_data_with_unique_time(time, data)
     print(data)
-    min_y=0
+    min_y=0.5
     if data:
-        min_y = min(data)
+        min_y += min(data)
     return render_template('graph.html', name=name.capitalize(), 
                 name_lower=name, data=data, 
                 time=time, title=f'Analyzer - {name.capitalize()}',

@@ -30,7 +30,7 @@ $(function() {
             type: 'GET',
             dataType: 'json',
             success: function(data){
-                if(data){
+                if(!$.isEmptyObject(data)){
                     if(2 > data['brightness'] >= 0)
                         child = 1;
                     else if(65 > data['brightness'] >= 2)

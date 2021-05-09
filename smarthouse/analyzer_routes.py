@@ -32,7 +32,6 @@ class Analyzer():
         self.current_settings = current_settings
     def set_time(self, time):
         self.time = time
-        print(time)
 
 analyzer_data = Analyzer()
 
@@ -40,9 +39,11 @@ def add_new_setting_analyzer(name_of_arg):
     new_settings = {}
     if request.form.get(name_of_arg):
         new_settings[name_of_arg] = request.form.get(name_of_arg)
+        new_settings['new_'+name_of_arg] = True
     else:
         if analyzer_data.new_settings.get(name_of_arg):
             new_settings[name_of_arg] = analyzer_data.new_settings[name_of_arg]
+            new_settings['new_'+name_of_arg] = True
     return new_settings
 
 @app.route('/analyzer', methods=['POST', 'GET'])
@@ -51,7 +52,7 @@ def analyzer():
         if request.method == 'POST':
             new_settings = {}
             new_settings.update(add_new_setting_analyzer('brightness'))
-            new_settings.update(add_new_setting_analyzer('zero'))
+            new_settings.update(add_new_setting_analyzer('sync'))
             analyzer_data.set_new_settings(new_settings)
     data = analyzer_data.data
     return render_template('analyzer.html', data=data, title='Analyzer',
@@ -190,9 +191,14 @@ class AnalyzerStatus(Resource):
 
 class AnalyzerNewSettings(Resource):
     def get(self):
-        new_settings = analyzer_data.new_settings
-        analyzer_data.set_new_settings({})
-        return new_settings
+        args = analyzer_get_settings.parse_args()
+        if(args and 'api' in args and args['api'] == APPID):
+            new_settings = analyzer_data.new_settings
+            analyzer_data.set_new_settings({})
+            print(new_settings)
+            return new_settings, 202
+        return '', 404
+        
 
 api.add_resource(AnalyzerGettingData, '/analyzer/data')
 api.add_resource(AnalyzerCurrentSettings, '/analyzer/settings')

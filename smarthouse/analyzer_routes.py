@@ -196,7 +196,7 @@ class AnalyzerNewSettings(Resource):
             new_settings = analyzer_data.new_settings
             analyzer_data.set_new_settings({})
             print(new_settings)
-            return new_settings, 202
+            return jsonify(new_settings)
         return '', 404
         
 

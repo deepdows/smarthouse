@@ -190,7 +190,7 @@ class AnalyzerStatus(Resource):
         return is_online()
 
 class AnalyzerNewSettings(Resource):
-    def get(self):
+    def post(self):
         args = analyzer_get_settings.parse_args()
         if(args and 'api' in args and args['api'] == APPID):
             new_settings = analyzer_data.new_settings

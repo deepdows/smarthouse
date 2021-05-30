@@ -32,6 +32,12 @@ class Analyzer():
         self.current_settings = current_settings
     def set_time(self, time):
         self.time = time
+    def is_online(self):
+        if self.time and ((datetime.datetime.now() 
+                                    - self.time).total_seconds() < 15):
+            return {'is_online': True}
+        else:
+            return {'is_online': False}
 
 analyzer_data = Analyzer()
 
@@ -57,7 +63,7 @@ def analyzer():
     data = analyzer_data.data
     return render_template('analyzer.html', data=data, title='Analyzer',
                         today=datetime.datetime.now().strftime('%Y%m%d'), 
-                        is_online=is_online()['is_online'],
+                        is_online=analyzer_data.is_online()['is_online'],
                         maps=[['Home', 'index'], 'Analyzer'])
 
 @app.route('/analyzer/reboot')
@@ -123,11 +129,6 @@ def graph(name, day):
                 one_day_ago_dashed=one_day_ago.strftime('%Y-%m-%d'),
                 maps=[['Home', 'index'], ['Analyzer', 'analyzer'], 
                                 name + '/' + day.strftime('%Y-%m-%d')])
-    
-@app.route('/analyzer/status', methods=['POST', 'GET'])
-def analyzer_status_api():
-    if request.method == 'GET':
-        return is_online()
 
 
 # API ANALYZER
@@ -178,16 +179,9 @@ class AnalyzerCurrentSettings(Resource):
             return '', 202
         return '', 404
 
-def is_online():
-    if analyzer_data.time and ((datetime.datetime.now() 
-                                - analyzer_data.time).total_seconds() < 15):
-        return {'is_online': True}
-    else:
-        return {'is_online': False}
-
 class AnalyzerStatus(Resource):
     def get(self):
-        return is_online()
+        return analyzer_data.is_online()
 
 class AnalyzerNewSettings(Resource):
     def post(self):

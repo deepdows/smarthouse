@@ -66,6 +66,6 @@ nav{
 nav .container{
     display: flex;
     flex-wrap: wrap;
-    font-family: Ubuntu;
+    font-family: 'Ubuntu';
     padding: 0 10px 5px;
 }

@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='smartplug.css') }}">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="bar">
+            <div id="signal">
+                {% if is_online %}
+                    {{is_online_var}}
+                    <span id='online'>Online</span>
+                {% else %}
+                    <span id='offline'>Offline</span>
+                {% endif %}
+            </div>
+            {% if current_user.is_authenticated %}
+            <div id="settings">
+                <img src="{{ url_for('static', filename='img/settings.svg') }}" alt="">
+                <img src="{{ url_for('static', filename='img/close.svg') }}" alt="">
+            </div>
+            {% endif %}
+        </div>
+        <div class="monitoring">
+            <a href="{{ url_for('graph', name='temperature', day=today) }}" class="temp">
+                <div class="value">{{ data['temperature'] }}</div>
+                <div class="second-column">
+                    <div class="name">Temperature</div>
+                    <div class="units">°C</div>
+                </div>
+            </a>
+            <a href="{{ url_for('graph', name='humidity', day=today) }}" class="hum">
+                <div class="value">{{ data['humidity'] }}</div>
+                <div class="second-column">
+                    <div class="name">Humidity</div>
+                    <div class="units">%</div>
+                </div>
+            </a>
+            <a href="{{ url_for('graph', name='co2', day=today) }}" class="co2">
+                <div class="value">{{ data['co2'] }}</div>
+                <div class="second-column">
+                    <div class="name">CO<sub><small>2</small></sub></div>
+                    <div class="units">ppm</div>
+                </div>
+            </a>
+            <a href="{{ url_for('graph', name='pressure', day=today) }}" class="pressure">
+                <div class="value">{{ data['pressure'] }}</div>
+                <div class="second-column">
+                    <div class="name">Pressure</div>
+                    <div class="units">hPa</div>
+                </div>
+            </a>
+        </div>
+        {% if current_user.is_authenticated %}
+        <div class="settings">
+            <form action="" method="POST">
+                <div>Brightness</div>
+                <div class="brightness-container">
+                    <span>off</span>
+                    <div class="brightness">
+                        <div class="line"></div>
+                        <input id="radio1" type="radio" name="brightness" value="0">
+                        <input id="radio2" type="radio" name="brightness" value="2">
+                        <input id="radio3" type="radio" name="brightness" value="65">
+                        <input id="radio4" type="radio" name="brightness" value="130">
+                        <input id="radio5" type="radio" name="brightness" value="190">
+                        <input id="radio6" type="radio" name="brightness" value="255">
+                    </div>
+                    <span>max</span>
+                </div>
+                <div>Synchronization</div>
+                <div class="sync-container">
+                    <input type="number" name='sync'>
+                </div>
+                <div class="btns">
+                    <input type="submit" value="Save">
+                    <a href="{{ url_for('reboot_smartplug') }}"><span>Reboot</span></a>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='smartplug.js') }}"></script>
+{% endblock %}

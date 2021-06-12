@@ -108,7 +108,7 @@ def graph_smartplug(name, day):
     date = datetime.datetime.combine(day, datetime.time(0))
     one_day_ahead = date + datetime.timedelta(days=1)
     one_day_ago = date - datetime.timedelta(days=1)
-    if name != 'current':
+    if name != 'current_sensor':
         flash(f'No graph for {name}', category='danger')
         return redirect(url_for('smartplug'))
     data, time = [], []
@@ -139,8 +139,8 @@ smartplug_get_data.add_argument('current_sensor', type=float)
 smartplug_get_data.add_argument('api', type=str)
 
 smartplug_get_settings = reqparse.RequestParser()
-smartplug_get_settings.add_argument('mode', type=bool)
-smartplug_get_settings.add_argument('state', type=bool)
+smartplug_get_settings.add_argument('auto_state', type=int)
+smartplug_get_settings.add_argument('relay_state', type=int)
 smartplug_get_settings.add_argument('time_on', type=str)
 smartplug_get_settings.add_argument('time_off', type=str)
 smartplug_get_settings.add_argument('api', type=str)
@@ -153,10 +153,10 @@ class SmartplugGettingData(Resource):
         args = smartplug_get_data.parse_args()
         if(args and 'api' in args and args['api'] == APPID):
             del args['api']
-            smartplug_data_post = SmartplugModel(current=args['current_sensor'])
+            smartplug_data_post = SmartplugModel(current_sensor=args['current_sensor'])
             db.session.add(smartplug_data_post)
             db.session.commit()
-            smartplug_data.set_data({'current':args['current_sensor']})
+            smartplug_data.set_data({'current_sensor':args['current_sensor']})
             smartplug_data.set_time(datetime.datetime.now())
             print(datetime.datetime.now())
             return '', 201
@@ -168,8 +168,8 @@ class SmartplugCurrentSettings(Resource):
     def post(self):
         args = smartplug_get_settings.parse_args()
         if(args and 'api' in args and args['api'] == APPID):
-            smartplug_data.set_current_settings({'state':args['state'], 
-                                                'mode':args['mode'],
+            smartplug_data.set_current_settings({'relay_state':args['relay_state'], 
+                                                'auto_state':args['auto_state'],
                                                 'time_on':args['time_on'],
                                                 'time_off':args['time_off']})
             return '', 202

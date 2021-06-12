@@ -111,6 +111,8 @@ def graph_smartplug(name, day):
     if name != 'current_sensor':
         flash(f'No graph for {name}', category='danger')
         return redirect(url_for('smartplug'))
+    else:
+        name = 'current'
     data, time = [], []
     all_data = SmartplugModel.query.filter(SmartplugModel.date
                                     .between(date, one_day_ahead)).all()

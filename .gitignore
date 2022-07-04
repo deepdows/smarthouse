@@ -1,5 +1,4 @@
 venv
 .vscode
-for_test.py
-update_server.py
-smarthouse/database.db
+*.db
+__pycache__

@@ -1,8 +1,7 @@
 from smarthouse import app
-import os
+from dotenv import load_dotenv
 
-os.environ['SECRET_KEY'] = '7e404faa12a7fdf4d526acc0578669b5'
-os.environ['APPID'] = '86a3cd175_4d5a28eb3f'
+load_dotenv()
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.0.104')
+    app.run(debug=True, host='0.0.0.0')
